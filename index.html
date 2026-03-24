@@ -179,7 +179,7 @@
             border: 1px solid rgba(111, 154, 76, 0.4);
         }
         
-        .tier-pro {
+        .tier-supporter {
             background: rgba(157, 170, 236, 0.2);
             color: #9daaec;
             border: 1px solid rgba(157, 170, 236, 0.4);
@@ -262,34 +262,34 @@
                     
                     <div class="tool-card">
                         <h3>
-                            🎓 Researchers' Mode
+                            🗺️ Intelligence Map
                             <span class="tier-badge tier-free">FREE</span>
+                        </h3>
+                        <p>134 species visualized in 3D, showing how intelligence organizes itself across life.</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            💬 PRAcel
+                            <span class="tier-badge tier-supporter">SUPPORTER</span>
+                        </h3>
+                        <p>A conversational AI guide grounded in 134 species profiles and the Perceive / Relate To / Apply framework.</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            🎓 Researchers' Mode
+                            <span class="tier-badge tier-supporter">SUPPORTER</span>
                         </h3>
                         <p>Academic research interface with citations, confidence indicators, and peer-reviewed sources.</p>
                     </div>
                     
                     <div class="tool-card">
                         <h3>
-                            🗺️ Intelligence Map
-                            <span class="tier-badge tier-pro">PRO</span>
-                        </h3>
-                        <p>3D visualization of species intelligence using sacred geometry and P/R/A coordinates.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3>
                             🤖 AI Consciousness Bridge
-                            <span class="tier-badge tier-pro">PRO</span>
+                            <span class="tier-badge tier-supporter">SUPPORTER</span>
                         </h3>
                         <p>Explore collaborative and competitive approaches to interspecies communication with AI assistance.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3>
-                            ⚖️ Legal Assistant
-                            <span class="tier-badge tier-pro">PRO</span>
-                        </h3>
-                        <p>Generate legal frameworks recognizing non-human intelligence and rights.</p>
                     </div>
                 </div>
             </div>
@@ -338,33 +338,23 @@
                 const result = await auth.signInWithPopup(provider);
                 const user = result.user;
                 
-                // Check if user exists in Firestore
-                const userDoc = await db.collection('users').doc(user.uid).get();
+                // Check if user exists in authorized_users (by email)
+                const userDoc = await db.collection('authorized_users').doc(user.email).get();
                 
                 if (!userDoc.exists) {
-                    // New user - create profile with free tier
+                    // New user - auto-create with free tier
                     const now = new Date();
                     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
                     
-                    await db.collection('users').doc(user.uid).set({
-                        email: user.email,
-                        displayName: user.displayName,
-                        photoURL: user.photoURL,
+                    await db.collection('authorized_users').doc(user.email).set({
                         tier: 'free',
                         searchesThisMonth: 0,
                         monthlyLimit: 25,
                         resetDate: nextMonth.toISOString().split('T')[0],
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        features: {
-                            researchExplorer: true,
-                            researchersMode: true,
-                            intelligenceMap: false,
-                            aiConsciousnessBridge: false,
-                            legalAssistant: false
-                        }
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    console.log('New user profile created');
+                    console.log('New user profile created in authorized_users');
                 }
                 
                 // Redirect to dashboard
