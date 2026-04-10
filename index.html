@@ -1,370 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unspeciated™ Research Portal</title>
-    
-    <!-- Poppins Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
-            min-height: 100vh;
-            color: rgba(240, 246, 253, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
-        
-        .glass {
-            background: rgba(240, 246, 253, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(157, 170, 236, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            padding: 60px 40px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 30px;
-            opacity: 0.9;
-        }
-        
-        h1 {
-            font-size: 2.5em;
-            color: rgba(240, 246, 253, 0.95);
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .tagline {
-            color: #6f9a4c;
-            font-size: 1.2em;
-            font-style: italic;
-            font-weight: 400;
-            margin-bottom: 30px;
-        }
-        
-        .description {
-            color: rgba(240, 246, 253, 0.8);
-            font-size: 1.05em;
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 0 auto 50px;
-        }
-        
-        .sign-in-section {
-            text-align: center;
-            margin: 50px 0;
-        }
-        
-        .google-sign-in-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            padding: 18px 40px;
-            background: linear-gradient(135deg, #6f9a4c, #4e6440);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1em;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(111, 154, 76, 0.3);
-        }
-        
-        .google-sign-in-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(111, 154, 76, 0.5);
-        }
-        
-        .google-icon {
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 4px;
-            padding: 4px;
-        }
-        
-        .tools-preview {
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(157, 170, 236, 0.2);
-        }
-        
-        .tools-preview h2 {
-            text-align: center;
-            color: rgba(240, 246, 253, 0.95);
-            font-size: 1.8em;
-            margin-bottom: 30px;
-        }
-        
-        .tool-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .tool-card {
-            background: rgba(240, 246, 253, 0.05);
-            border: 1px solid rgba(157, 170, 236, 0.15);
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s ease;
-        }
-        
-        .tool-card:hover {
-            background: rgba(157, 170, 236, 0.1);
-            border-color: rgba(157, 170, 236, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .tool-card h3 {
-            color: rgba(240, 246, 253, 0.95);
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .tool-card p {
-            color: rgba(240, 246, 253, 0.7);
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-        
-        .tier-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-weight: 600;
-            margin-left: auto;
-        }
-        
-        .tier-free {
-            background: rgba(111, 154, 76, 0.2);
-            color: #6f9a4c;
-            border: 1px solid rgba(111, 154, 76, 0.4);
-        }
-        
-        .tier-supporter {
-            background: rgba(157, 170, 236, 0.2);
-            color: #9daaec;
-            border: 1px solid rgba(157, 170, 236, 0.4);
-        }
-        
-        .footer {
-            margin-top: 60px;
-            text-align: center;
-            color: rgba(240, 246, 253, 0.5);
-            font-size: 0.9em;
-        }
-        
-        .footer a {
-            color: rgba(111, 154, 76, 0.8);
-            text-decoration: none;
-        }
-        
-        .footer a:hover {
-            color: #6f9a4c;
-        }
-
-        @media (max-width: 768px) {
-            .glass {
-                padding: 40px 20px;
-            }
-            
-            h1 {
-                font-size: 1.8em;
-            }
-            
-            .tagline {
-                font-size: 1em;
-            }
-            
-            .tool-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unspeciated™ Intelligence Framework Guide</title>
+  <meta name="description" content="172 species. Every kingdom of life. A framework that sees intelligence through perception, meaning, and context.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #2a2725; overflow: hidden; }
+    button { font-family: inherit; }
+    @keyframes praguide_fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="glass">
-            <div class="header">
-                <img src="https://images.squarespace-cdn.com/content/6404d194cd10dd208e6bcde9/e438bf7b-d895-4c38-a8fe-31ce60d79077/Unspeciated+logo+round+trspbknd.png?content-type=image%2Fpng?content-type=image%2Fpng" alt="Unspeciated" class="logo">
-                <h1>Unspeciated™ Research Portal</h1>
-                <p class="tagline">Redefining Intelligence Through the P/R/A Framework</p>
-                <p class="description">
-                    Explore intelligence as a collaborative field operating across all species. 
-                    Access research tools that bridge scientific rigor with lived experience, 
-                    revealing patterns of perception, relation, and application beyond human-centered assumptions.
-                </p>
-            </div>
-            
-            <div class="sign-in-section">
-                <button class="google-sign-in-btn" id="googleSignInBtn">
-                    <svg class="google-icon" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                    </svg>
-                    Sign in with Google
-                </button>
-                <p style="margin-top: 20px; color: rgba(240, 246, 253, 0.6); font-size: 0.9em;">
-                    Free account • 25 searches per month
-                </p>
-            </div>
-            
-            <div class="tools-preview">
-                <h2>Research Tools Available</h2>
-                <div class="tool-grid">
-                    <div class="tool-card">
-                        <h3>
-                            🔍 Research Explorer
-                            <span class="tier-badge tier-free">FREE</span>
-                        </h3>
-                        <p>Discover species intelligence through conversational exploration. Compare capabilities across multiple species.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3>
-                            🗺️ Intelligence Map
-                            <span class="tier-badge tier-free">FREE</span>
-                        </h3>
-                        <p>134 species visualized in 3D, showing how intelligence organizes itself across life.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3>
-                            💬 PRAcel
-                            <span class="tier-badge tier-supporter">SUPPORTER</span>
-                        </h3>
-                        <p>A conversational AI guide grounded in 134 species profiles and the Perceive / Relate To / Apply framework.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3>
-                            🎓 Researchers' Mode
-                            <span class="tier-badge tier-supporter">SUPPORTER</span>
-                        </h3>
-                        <p>Academic research interface with citations, confidence indicators, and peer-reviewed sources.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3>
-                            🤖 AI Consciousness Bridge
-                            <span class="tier-badge tier-supporter">SUPPORTER</span>
-                        </h3>
-                        <p>Explore collaborative and competitive approaches to interspecies communication with AI assistance.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer">
-                <p>© 2026 Generation of Harmony LLC | Intuitive Learning Foundation</p>
-                <p style="margin-top: 10px;">
-                    <a href="https://generateharmony.com" target="_blank">About</a> • 
-                    <a href="mailto:kerri@generateharmony.com">Contact</a> • 
-                    <a href="https://generateharmony.com/framework" target="_blank">Framework Guide</a>
-                </p>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-  apiKey: "AIzaSyD9y7dqlGUj3bONA9KboTdpvsKJXYhqR4o",
-  authDomain: "redefining-intelligence-suite.firebaseapp.com",
-  projectId: "redefining-intelligence-suite",
-  storageBucket: "redefining-intelligence-suite.firebasestorage.app",
-  messagingSenderId: "933861834236",
-  appId: "1:933861834236:web:77b7c3ed7190050936c679",
-  measurementId: "G-GM2EZ55SGM"
+  <div id="root"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script>
+const { useState, useEffect, useRef, createElement: h } = React;
+
+// ─── Species Data ───
+const speciesData = [
+  { name: "Aspen Trees", kingdom: "Plant", category: "Relate To", group: "Trees", icon: "\u{1F333}", p: 0.70, r: 0.91, a: 0.65,
+    tagline: "One organism spanning acres and centuries",
+    narrative: "What appears as a forest of individual trees is one organism \u2014 a clonal network maintaining unified consciousness across hundreds of acres and multiple centuries, processing information democratically through underground root systems. Each stem functions simultaneously as autonomous agent and integrated component of an ancient collective being. Pando is estimated at 80,000 years old, representing meaning-making across deep time that exceeds any neurologically-based system." },
+  { name: "Bears", kingdom: "Animal", category: "Relate To", group: "Mammals", icon: "\u{1F43B}", p: 0.75, r: 0.85, a: 0.70,
+    tagline: "A solitary meaning-maker in continuous walking meditation",
+    narrative: "Bears demonstrate continuous perceptual integration \u2014 holding multiple sensory streams in ongoing relationship to each other as they move through landscapes spanning hundreds of square miles. Weaving scent, season, spatial memory, temperature, and subtle energy patterns into a coherent embodied understanding of the world across years. Bears are keystone species whose meaning-making is inextricable from their ecosystem \u2014 removing the bear changes everything. Their relationship to information encompasses the whole landscape, making their meaning-making ecologically relational even without social structure." },
+  { name: "Coral Reefs", kingdom: "Animal", category: "Relate To", group: "Marine Colonies", icon: "\u{1FAB8}", p: 0.85, r: 0.92, a: 0.77,
+    tagline: "A living switchboard of extraordinary complexity",
+    narrative: "The reef\u2019s intelligence IS relational integration; without meaning-making across species boundaries, there is no reef, just scattered organisms. Spawning synchronized to lunar cycles across vast distances. Chemical signaling coordinated across biological kingdoms. Consensus responses to temperature, threat, and opportunity emerging from the integration of countless information streams. A being whose intelligence is the act of integration itself \u2014 creating shared meaning across boundaries that most beings never cross, and in doing so, building one of the most biodiverse structures on Earth." },
+  { name: "Crows", kingdom: "Animal", category: "Relate To", group: "Birds", icon: "\u{1F426}", p: 0.80, r: 0.88, a: 0.78,
+    tagline: "Thinking about thinking itself",
+    narrative: "Crows demonstrate metacognition, theory of mind, episodic memory, and future planning. A crow fashioning a hooked tool demonstrates meaning-making before action: understanding the problem, modeling a solution that does not yet exist, and predicting that the tool will work before making it. That is Relate producing Apply. Their existence is organized around how they interact with their world rather than how they transform it." },
+  { name: "Dolphins", kingdom: "Animal", category: "Relate To", group: "Marine Mammals", icon: "\u{1F42C}", p: 0.75, r: 0.86, a: 0.75,
+    tagline: "Oceanic pod intelligence in near-perfect balance",
+    narrative: "Echolocation is active interrogation \u2014 a request for meaning and interpretation of the return, not passive detection. Dolphins share wolves\u2019 pod/pack social architecture and comparable meaning-making depth, with the additional echolocation channel providing an extra dimension of active information-processing. Terrestrial pack and oceanic pod arriving at nearly identical intelligence configurations through entirely different biology." },
+  { name: "Elephants", kingdom: "Animal", category: "Relate To", group: "Mammals", icon: "\u{1F418}", p: 0.75, r: 0.90, a: 0.80,
+    tagline: "Living libraries of ancestral wisdom",
+    narrative: "Elephants hold and process information across generational timescales, creating living libraries of ancestral wisdom transmitted through matriarchal lineages. Grief rituals, self-recognition, and teaching behaviors suggest awareness of awareness. Their temporal intelligence \u2014 the ability to integrate experience across decades and transmit collective knowledge \u2014 represents consciousness as an ancestral, collective phenomenon." },
+  { name: "Horses", kingdom: "Animal", category: "Relate To", group: "Mammals", icon: "\u{1F434}", p: 0.80, r: 0.88, a: 0.70,
+    tagline: "Making the invisible legible",
+    narrative: "Horses read bioelectric and emotional states of other beings \u2014 not just detecting them but interpreting, holding, and responding to their meaning. Within a herd, horses track shifts in the relational field before overt behavior signals anything. This is coherence-checking at a depth that operates below and beyond analytical confirmation \u2014 felt-sense validation in real time. A being whose intelligence lives in relationship to information at every level \u2014 reading, interpreting, and holding the coherence of the relational field it inhabits with a depth that makes the invisible legible." },
+  { name: "Kelp", kingdom: "Plant", category: "Relate To", group: "Marine Plants", icon: "\u{1F33F}", p: 0.80, r: 0.85, a: 0.60,
+    tagline: "Conducting a symphony of oceanic information",
+    narrative: "Kelp is immersed in a medium that delivers information continuously \u2014 ocean chemistry, light penetration, water movement, pressure changes, nutrient flows, temperature variations, and acoustic vibrations are all in constant flux. Unlike terrestrial plants that monitor seasonal and gradual changes, kelp conducts a symphony of simultaneous perceptual inputs moment to moment. An ecosystem architect that creates and sustains conditions for hundreds of marine species through communal meaning-making." },
+  { name: "Lactobacillus", kingdom: "Bacteria", category: "Relate To", group: "Microorganisms", icon: "\u{1F9A0}", p: 0.55, r: 0.80, a: 0.70,
+    tagline: "Community meaning-making at the cellular level",
+    narrative: "Lactobacillus demonstrates community-level meaning-making through quorum sensing \u2014 assessing collective density and coordinating behavior shifts across the colony. The entire microbiome appears to respond as a unified whole \u2014 to food, medicine, toxins \u2014 rather than waiting for step-by-step chemical propagation. This is meaning-making that may operate through channels not yet measurable, paralleling embodied coherence observed in mammals at different scales." },
+  { name: "Mycelial Networks", kingdom: "Fungi", category: "Relate To", group: "Fungi", icon: "\u{1F344}", p: 0.72, r: 0.90, a: 0.68,
+    tagline: "The living intelligence beneath our feet",
+    narrative: "The mycelium IS the switchboard. Resource brokering across species boundaries, pathogen detection and defense coordination, nutrient allocation decisions sustained across decades and entire forest ecosystems. A network with no neurons and no central processing that nonetheless makes allocation decisions sustaining entire forests. An elephant and a mycelial network arriving at the same dimensional weight through pathways so different that comparing them almost breaks the categories." },
+  { name: "Whales", kingdom: "Animal", category: "Relate To", group: "Marine Mammals", icon: "\u{1F40B}", p: 0.80, r: 0.92, a: 0.75,
+    tagline: "Song traditions spanning ocean basins and decades",
+    narrative: "Whales are deeply Relate-primary. Echolocation is active interrogation \u2014 a request for meaning and interpretation of the return. Cultural dialects maintained across generations, multi-generational knowledge transmission, and coordinated behaviors like bubble-net feeding all indicate that meaning-making is the organizing center of whale intelligence. Their relational presence \u2014 a felt quality of reaching out to connect \u2014 parallels horses\u2019 embodied receptive coherence but through acoustic rather than electromagnetic pathways." },
+  { name: "Wolves", kingdom: "Animal", category: "Relate To", group: "Mammals", icon: "\u{1F43A}", p: 0.75, r: 0.85, a: 0.75,
+    tagline: "Pack coherence as shared intelligence",
+    narrative: "Wolves are genuine meaning-makers through pack coherence, shared emotional states, and coordinated decision-making. Different social architectures arriving at comparable meaning-making depth. Wolves genuinely transform ecosystems through behavioral influence (\u2018landscape of fear\u2019 cascade effects), but through behavioral presence rather than physical construction." },
+  { name: "Cassowary", kingdom: "Animal", category: "Relate To", group: "Birds", icon: "\u{1F985}", p: 0.70, r: 0.75, a: 0.65,
+    tagline: "Sustaining a forest by simply being itself",
+    narrative: "Cassowaries disperse seeds of more than 150 tree species and are the sole disperser for at least 80 \u2014 a profound ecological contribution \u2014 but this is a consequence of foraging, not deliberate ecosystem engineering. They eat fruit, walk through the forest on established trails, and excrete seeds. The forest is sustained by their passage through it, not by architectural intention. A solitary being who knows its forest deeply \u2014 reading the dense rainforest through sound and memory, and sustaining an entire ecosystem not through deliberate action but through the simple, profound act of living its life." },
+  // Perceive-primary
+  { name: "Crystals", kingdom: "Mineral", category: "Perceive", group: "Mineral", icon: "\u{1F48E}", p: 0.35, r: 0.20, a: 0.25,
+    tagline: "Pure sensation without interpretation",
+    narrative: "Crystals respond to electromagnetic fields, piezoelectric pressure, temperature, vibration, and resonant frequencies through direct structural changes. This is Firstness-level processing \u2014 pure sensation and quality without interpretation or meaning-making. Extraordinary electromagnetic sensitivity spanning cosmic to nanoscale phenomena, with structural memory encoded in crystalline lattice. Intelligence at its most elemental: the capacity to receive." },
+  { name: "Flies", kingdom: "Animal", category: "Perceive", group: "Insects", icon: "\u{1FAB0}", p: 0.75, r: 0.57, a: 0.70,
+    tagline: "Experiencing the world in bullet-time",
+    narrative: "Flies perceive with extraordinary temporal resolution \u2014 compound eye processing at 300 frames per second, 20-millisecond response times. The meaning-making layer is present but thin; it is not the organizing center. A being whose intelligence is organized around extraordinary speed of perception \u2014 experiencing the world in a temporal resolution most species cannot access. What humans experience as a blur, a fly experiences as a detailed unfolding." },
+  { name: "Grasshoppers", kingdom: "Animal", category: "Perceive", group: "Insects", icon: "\u{1F997}", p: 0.78, r: 0.60, a: 0.70,
+    tagline: "Seeing Earth\u2019s magnetic field",
+    narrative: "Grasshoppers perceive through an extraordinary sensory architecture packed into a tiny neural network \u2014 compound eyes detecting UV and polarized light, antennae functioning as multi-purpose receivers for chemical, pressure, and magnetic information, subgenual organs sensing ground vibrations, and magnetite-based magnetic field detection. They read the world through an astonishing array of channels, navigating using polarized light patterns as highways in the sky." },
+  { name: "Jellyfish", kingdom: "Animal", category: "Perceive", group: "Marine Invertebrates", icon: "\u{1FABC}", p: 0.85, r: 0.55, a: 0.60,
+    tagline: "500 million years of sensory optimization",
+    narrative: "Jellyfish represent 500 million years of sensory optimization through radically distributed architecture \u2014 photoreception including UV and polarized light, mechanoreception, chemoreception, gravity sensing, magnetic and electrical field detection \u2014 all operating without centralized processing. An ancient intelligence that goes almost directly from sensing to responding, with minimal interpretive processing \u2014 proof that high-level environmental awareness requires neither centralization nor complex meaning-making." },
+  { name: "Mantis Shrimp", kingdom: "Animal", category: "Perceive", group: "Marine Invertebrates", icon: "\u{1F990}", p: 0.85, r: 0.72, a: 0.76,
+    tagline: "Perceiving dimensions of reality most life cannot access",
+    narrative: "The visual hardware is genuinely extraordinary \u2014 12-16 photoreceptors, polarization detection, UV/infrared perception, circular polarization sensing, temporal resolution 10x faster than humans. Those photoreceptors may be accessing energetic dimensions that human researchers haven\u2019t yet learned to study. Fluorescent signaling in wavelengths other species cannot see creates a private communication channel where meaning is made and shared. A being whose intelligence is governed by perception of remarkable depth \u2014 a visual system that may access dimensions of reality most life cannot." },
+  // Apply-primary
+  { name: "Frogs", kingdom: "Animal", category: "Apply", group: "Amphibians", icon: "\u{1F438}", p: 0.75, r: 0.65, a: 0.85,
+    tagline: "The living pulse of the ecosystems they inhabit",
+    narrative: "The range of application is extraordinary \u2014 metamorphosis between two entirely different body plans, dual-realm living across aquatic and terrestrial environments, coordinated acoustic chorusing, bacterial cultivation on skin, and bioelectric capacities. Frogs do not physically reshape their environment the way ecosystem engineers do, but their presence IS ecosystem functioning \u2014 when frogs are present, the system is healthy; when they disappear, everything shifts. A being whose intelligence is organized around an extraordinary range of doing \u2014 living two lives in two realms." },
+  { name: "Humans", kingdom: "Animal", category: "Apply", group: "Primates", icon: "\u{1F9D1}", p: 0.50, r: 0.65, a: 0.85,
+    tagline: "Compulsive doers with potential to expand perception and clarify meaning",
+    narrative: "Humans possess sophisticated sensory hardware but are severely limited in conscious awareness of what they perceive. Much of what humans call meaning-making is intellectual analysis \u2014 reading dials rather than sensing pressure, interpreting data rather than embodying knowing. Humans are compulsively action-oriented \u2014 regardless of the quality of perception or depth of meaning-making, the default is to act on and change the external world." },
+  // Special
+  { name: "Earth", kingdom: "Mineral", category: "Perceive", group: "Planetary", icon: "\u{1F30D}", p: 0.92, r: 0.90, a: 0.80,
+    tagline: "A living being sensing at every scale simultaneously",
+    narrative: "Earth perceives across extraordinary breadth \u2014 electromagnetic fields, gravitational waves, chemical gradients, thermal dynamics, quantum coherence, and biological feedback networks spanning cellular to planetary scales. Every creature on its surface functions as a sensory organ. Climate regulation, tectonic adjustment, and evolutionary pressure all suggest information passing through a meaning-making layer that operates across geological time scales. A living being whose intelligence is organized around continuous perception at every scale \u2014 sensing its own systems, its solar community, and the creatures who inhabit it." },
+];
+
+const categoryMeta = {
+  "Relate To": { color: "#6a9ab5", colorDark: "#3d6178", bg: "rgba(61,97,120,0.08)", border: "rgba(61,97,120,0.22)", label: "Relate To", desc: "Making meaning of what is perceived",
+    long: "How an individual internally holds and responds to what is perceived. The act of meaning-making \u2014 where felt weight, significance, and orientation arise. This is where information becomes understanding." },
+  "Perceive": { color: "#d6a86c", colorDark: "#d6a86c", bg: "rgba(214,168,108,0.08)", border: "rgba(214,168,108,0.22)", label: "Perceive", desc: "Taking in information",
+    long: "The capacity to detect both linear and nonlinear information \u2014 sensory data, patterns, felt sense, environmental signals. How many channels a species receives through, and how deep the reception within those channels." },
+  "Apply": { color: "#c47a52", colorDark: "#c47a52", bg: "rgba(196,122,82,0.08)", border: "rgba(196,122,82,0.22)", label: "Apply", desc: "Acting on it in living context",
+    long: "Applying information in relation to living contexts and the way life collaborates with itself. The breadth and depth of a species\u2019 behavioral repertoire \u2014 action that emerges from relationship, not just processing." },
 };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        // Check if already signed in
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // User is signed in, redirect to dashboard
-                window.location.href = 'dashboard.html';
-            }
-        });
-        
-        // Google Sign-In
-        document.getElementById('googleSignInBtn').addEventListener('click', async () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            
-            try {
-                const result = await auth.signInWithPopup(provider);
-                const user = result.user;
-                
-                // Check if user exists in authorized_users (by email)
-                const userDoc = await db.collection('authorized_users').doc(user.email).get();
-                
-                if (!userDoc.exists) {
-                    // New user - auto-create with free tier
-                    const now = new Date();
-                    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-                    
-                    await db.collection('authorized_users').doc(user.email).set({
-                        tier: 'free',
-                        searchesThisMonth: 0,
-                        monthlyLimit: 25,
-                        resetDate: nextMonth.toISOString().split('T')[0],
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    console.log('New user profile created in authorized_users');
-                }
-                
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-                
-            } catch (error) {
-                console.error('Sign-in error:', error);
-                alert('Sign-in failed. Please try again.');
-            }
-        });
-    </script>
+
+const sections = [
+  { id: "welcome", label: "Welcome" },
+  { id: "question", label: "The Question" },
+  { id: "framework", label: "P / R / A" },
+  { id: "data", label: "What Life Shows" },
+  { id: "explorer", label: "Species" },
+  { id: "recognition", label: "Recognition" },
+  { id: "vision", label: "What\u2019s Possible" },
+];
+
+// ─── Helper: create element shorthand ───
+function E(tag, props, ...children) { return h(tag, props, ...children); }
+
+// ─── ScoreBar ───
+function ScoreBar({ label, value, color, description }) {
+  const [show, setShow] = useState(false);
+  return E("div", { style: { marginBottom: 8 } },
+    E("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 } },
+      E("button", { onClick: function() { setShow(!show); }, style: { background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 } },
+        E("span", { style: { fontSize: 12, color: "rgba(255,255,255,0.5)", fontFamily: "'Newsreader', serif" } }, label),
+        E("span", { style: { fontSize: 9, width: 14, height: 14, borderRadius: 7, border: "1px solid rgba(255,255,255,0.2)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.35)", fontFamily: "'Newsreader', serif" } }, "?")
+      ),
+      E("span", { style: { fontSize: 12, color: color, fontFamily: "'JetBrains Mono', monospace", fontWeight: 500 } }, value.toFixed(2))
+    ),
+    E("div", { style: { height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" } },
+      E("div", { style: { height: "100%", width: (value * 100) + "%", background: color, borderRadius: 2, transition: "width 0.8s cubic-bezier(0.4,0,0.2,1)" } })
+    ),
+    show ? E("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.45)", margin: "6px 0 0", fontFamily: "'Newsreader', serif", lineHeight: 1.5, fontStyle: "italic" } }, description) : null
+  );
+}
+
+// ─── NavDot ───
+function NavDot({ active, label, onClick }) {
+  return E("button", { onClick: onClick, title: label, "aria-label": label, style: {
+    width: active ? 28 : 8, height: 8, borderRadius: 4, border: "none",
+    background: active ? "#6a9ab5" : "rgba(255,255,255,0.15)",
+    cursor: "pointer", transition: "all 0.4s cubic-bezier(0.4,0,0.2,1)", padding: 0,
+  } });
+}
+
+// ─── Welcome ───
+function WelcomeSection({ onNext }) {
+  var vis = useState(false), isVis = vis[0], setVis = vis[1];
+  useEffect(function() { setTimeout(function() { setVis(true); }, 150); }, []);
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "48px 28px", opacity: isVis ? 1 : 0, transform: isVis ? "none" : "translateY(24px)", transition: "all 1s cubic-bezier(0.4,0,0.2,1)" } },
+    E("div", { style: { fontSize: 11, letterSpacing: "0.35em", textTransform: "uppercase", color: "#6a9ab5", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" } }, "Unspeciated\u2122 Intelligence Framework"),
+    E("h1", { style: { fontSize: "clamp(26px, 5.5vw, 46px)", fontWeight: 300, textAlign: "center", lineHeight: 1.25, margin: "0 0 20px", color: "#f0ebe3", fontFamily: "'Newsreader', serif" } },
+      "What if the species you work with", E("br"), E("em", { style: { color: "#6a9ab5", fontWeight: 400 } }, "are already showing us what true intelligence looks like?")
+    ),
+    E("p", { style: { fontSize: "clamp(14px, 2.2vw, 17px)", color: "rgba(255,255,255,0.5)", textAlign: "center", maxWidth: 480, lineHeight: 1.75, margin: "0 0 44px", fontFamily: "'Newsreader', serif" } },
+      "172 species. Every kingdom of life. A framework that sees intelligence the way you already do \u2014 through perception, meaning, and context."
+    ),
+    E("button", { onClick: onNext, style: { background: "transparent", border: "1px solid rgba(61,97,120,0.5)", color: "#6a9ab5", padding: "14px 40px", borderRadius: 40, fontSize: 14, cursor: "pointer", fontFamily: "'Newsreader', serif", letterSpacing: "0.04em", transition: "all 0.3s ease" },
+      onMouseEnter: function(e) { e.target.style.background = "rgba(61,97,120,0.15)"; },
+      onMouseLeave: function(e) { e.target.style.background = "transparent"; }
+    }, "Begin \u2192"),
+    E("div", { style: { marginTop: 56, fontSize: 11, color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", lineHeight: 1.6 } },
+      "Kerri Lake \u00B7 Generation of Harmony", E("br"), "Intuitive Learning Foundation"
+    )
+  );
+}
+
+// ─── Question ───
+function QuestionSection() {
+  var st = useState(0), step = st[0], setStep = st[1];
+  useEffect(function() {
+    var t1 = setTimeout(function() { setStep(1); }, 400);
+    var t2 = setTimeout(function() { setStep(2); }, 1400);
+    var t3 = setTimeout(function() { setStep(3); }, 2400);
+    return function() { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+  var lines = [
+    { text: "You already know this:", color: "rgba(255,255,255,0.45)", size: "clamp(15px, 2.5vw, 19px)", weight: 300 },
+    { text: "The species you study, protect, and care for are intelligent in ways that standard frameworks can\u2019t recognize.", color: "#eee9e1", size: "clamp(18px, 3.5vw, 27px)", weight: 300 },
+    { text: "What if there were a framework that could?", color: "#6a9ab5", size: "clamp(19px, 4vw, 30px)", weight: 400, italic: true },
+  ];
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 28px", maxWidth: 600, margin: "0 auto" } },
+    lines.map(function(l, i) {
+      return E("p", { key: i, style: { fontSize: l.size, fontWeight: l.weight, color: l.color, fontFamily: "'Newsreader', serif", lineHeight: 1.5, fontStyle: l.italic ? "italic" : "normal", opacity: step > i ? 1 : 0, transform: step > i ? "none" : "translateY(16px)", transition: "all 0.8s cubic-bezier(0.4,0,0.2,1)", marginBottom: i === 0 ? 12 : i === 1 ? 36 : 0 } }, l.text);
+    })
+  );
+}
+
+// ─── Framework ───
+function FrameworkSection() {
+  var ac = useState(null), active = ac[0], setActive = ac[1];
+  var dims = [
+    { key: "P", label: "Perceive", color: "#d6a86c", short: "Taking in information",
+      desc: "The capacity to detect both linear and nonlinear information \u2014 sensory data, patterns, felt sense, environmental signals. Every species perceives through a different combination of channels, at different depths. A mantis shrimp sees in 16 color channels. A horse reads bioelectric fields. A mycelial network senses chemical gradients across acres." },
+    { key: "R", label: "Relate To", color: "#6a9ab5", short: "Making meaning of it",
+      desc: "How an individual internally holds and responds to what is perceived. This is not about relationships between species \u2014 it\u2019s about the internal act of meaning-making. Where information gains weight, significance, and orientation. An elephant holds generational memory. A coral reef integrates across species boundaries. A bear weaves an entire landscape into embodied understanding." },
+    { key: "A", label: "Apply", color: "#c47a52", short: "Acting on it in living context",
+      desc: "Applying information in relation to living contexts and the way life collaborates with itself. The breadth and depth of what a species does with what it knows. A frog transforms between two body plans. A beaver reshapes a watershed. A human compulsively acts on and changes the external world." },
+  ];
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 28px", maxWidth: 560, margin: "0 auto" } },
+    E("div", { style: { fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 12, fontFamily: "'JetBrains Mono', monospace" } }, "The Framework"),
+    E("h2", { style: { fontSize: "clamp(22px, 4.5vw, 34px)", fontWeight: 300, color: "#f0ebe3", margin: "0 0 8px", fontFamily: "'Newsreader', serif" } }, "Perceive \u00B7 Relate To \u00B7 Apply"),
+    E("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.4)", margin: "0 0 32px", fontFamily: "'Newsreader', serif", lineHeight: 1.65 } }, "Every species organizes its intelligence through these three capacities. Each species leads with a different one \u2014 the dimension that the others serve. Tap each to explore."),
+    E("div", { style: { display: "flex", flexDirection: "column", gap: 10 } },
+      dims.map(function(d) {
+        var isActive = active === d.key;
+        return E("button", { key: d.key, onClick: function() { setActive(isActive ? null : d.key); }, style: {
+          background: isActive ? d.color + "12" : "rgba(255,255,255,0.02)", border: "1px solid " + (isActive ? d.color + "40" : "rgba(255,255,255,0.06)"),
+          borderRadius: 14, padding: isActive ? "20px 22px" : "16px 22px", cursor: "pointer", textAlign: "left", transition: "all 0.35s ease" } },
+          E("div", { style: { display: "flex", alignItems: "center", gap: 14 } },
+            E("span", { style: { fontSize: 26, fontWeight: 200, color: d.color, width: 32, fontFamily: "'Newsreader', serif" } }, d.key),
+            E("div", null,
+              E("div", { style: { fontSize: 16, fontWeight: 500, color: "#f0ebe3", fontFamily: "'Newsreader', serif" } }, d.label),
+              E("div", { style: { fontSize: 12, color: "rgba(255,255,255,0.4)", fontFamily: "'Newsreader', serif" } }, d.short)
+            )
+          ),
+          isActive ? E("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: "14px 0 0 46px", fontFamily: "'Newsreader', serif" } }, d.desc) : null
+        );
+      })
+    )
+  );
+}
+
+// ─── Data ───
+function DataSection() {
+  var rv = useState(false), revealed = rv[0], setRevealed = rv[1];
+  useEffect(function() { setTimeout(function() { setRevealed(true); }, 500); }, []);
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 28px", maxWidth: 560, margin: "0 auto" } },
+    E("div", { style: { fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 12, fontFamily: "'JetBrains Mono', monospace" } }, "172 Species \u00B7 Every Kingdom of Life"),
+    E("h2", { style: { fontSize: "clamp(20px, 4vw, 30px)", fontWeight: 300, color: "#f0ebe3", margin: "0 0 28px", fontFamily: "'Newsreader', serif", lineHeight: 1.3 } },
+      "When you map intelligence across species, ", E("em", { style: { color: "#6a9ab5" } }, "meaning-making leads")
+    ),
+    // Bar
+    E("div", { style: { width: "100%", height: 44, borderRadius: 10, overflow: "hidden", display: "flex", marginBottom: 20, opacity: revealed ? 1 : 0, transition: "opacity 0.6s ease" } },
+      E("div", { style: { width: revealed ? "61%" : "0%", background: "linear-gradient(90deg, #2d3d4a, #6a9ab5)", transition: "width 1.4s cubic-bezier(0.4,0,0.2,1)", display: "flex", alignItems: "center", justifyContent: "center" } },
+        E("span", { style: { fontSize: 13, fontWeight: 600, color: "#1a1a1a", fontFamily: "'JetBrains Mono', monospace" } }, "61% Relate To")
+      ),
+      E("div", { style: { width: revealed ? "18%" : "0%", background: "linear-gradient(90deg, #8a7044, #d6a86c)", transition: "width 1.4s cubic-bezier(0.4,0,0.2,1) 0.25s", display: "flex", alignItems: "center", justifyContent: "center" } },
+        E("span", { style: { fontSize: 11, fontWeight: 600, color: "#1a1a1a", fontFamily: "'JetBrains Mono', monospace" } }, "18% P")
+      ),
+      E("div", { style: { width: revealed ? "12%" : "0%", background: "linear-gradient(90deg, #7a4a30, #c47a52)", transition: "width 1.4s cubic-bezier(0.4,0,0.2,1) 0.5s", display: "flex", alignItems: "center", justifyContent: "center" } },
+        E("span", { style: { fontSize: 11, fontWeight: 600, color: "#1a1a1a", fontFamily: "'JetBrains Mono', monospace" } }, "12%")
+      ),
+      E("div", { style: { width: revealed ? "9%" : "0%", background: "linear-gradient(90deg, #3a3a3a, #888)", transition: "width 1.4s cubic-bezier(0.4,0,0.2,1) 0.75s", display: "flex", alignItems: "center", justifyContent: "center" } },
+        E("span", { style: { fontSize: 10, fontWeight: 600, color: "#1a1a1a", fontFamily: "'JetBrains Mono', monospace" } }, "9%")
+      )
+    ),
+    // Legend
+    E("div", { style: { display: "flex", gap: 16, marginBottom: 28, flexWrap: "wrap", opacity: revealed ? 1 : 0, transition: "opacity 0.6s ease 1.2s" } },
+      [{ label: "Relate To", pct: "61%", color: "#6a9ab5" }, { label: "Perceive", pct: "18%", color: "#d6a86c" }, { label: "Apply", pct: "12%", color: "#c47a52" }, { label: "Balanced", pct: "9%", color: "#888" }].map(function(d) {
+        return E("div", { key: d.label, style: { display: "flex", alignItems: "center", gap: 6 } },
+          E("div", { style: { width: 8, height: 8, borderRadius: 4, background: d.color } }),
+          E("span", { style: { fontSize: 12, color: "rgba(255,255,255,0.5)", fontFamily: "'Newsreader', serif" } }, d.label + " (" + d.pct + ")")
+        );
+      })
+    ),
+    E("p", { style: { fontSize: 15, color: "rgba(255,255,255,0.55)", lineHeight: 1.75, fontFamily: "'Newsreader', serif", margin: "0 0 24px" } },
+      "The majority of species we\u2019ve profiled organize their intelligence primarily through meaning-making \u2014 through how they internally ", E("em", null, "relate to"), " what they perceive. From bacteria to whales, fungi to forests, the pattern holds across every kingdom."
+    ),
+    E("div", { style: { background: "rgba(196,122,82,0.06)", border: "1px solid rgba(196,122,82,0.18)", borderRadius: 12, padding: "16px 20px", opacity: revealed ? 1 : 0, transition: "opacity 0.8s ease 1.8s" } },
+      E("p", { style: { fontSize: 14, color: "#c47a52", margin: 0, fontFamily: "'Newsreader', serif", lineHeight: 1.65 } },
+        "Humans are one of the few species that are Apply-primary \u2014 compulsively oriented toward action and external change, with the potential to expand perception and deepen meaning-making."
+      )
+    )
+  );
+}
+
+// ─── Explorer ───
+function ExplorerSection() {
+  var fl = useState("all"), filter = fl[0], setFilter = fl[1];
+  var sr = useState(""), search = sr[0], setSearch = sr[1];
+  var sl = useState(null), selected = sl[0], setSelected = sl[1];
+  var sc = useState(null), showScores = sc[0], setShowScores = sc[1];
+
+  var filtered = speciesData.filter(function(s) {
+    if (s.name === "Earth") return false;
+    var matchCat = filter === "all" || s.category === filter;
+    var matchSearch = s.name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+      s.group.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+      s.kingdom.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+    return matchCat && matchSearch;
+  });
+  var counts = { all: speciesData.filter(function(s) { return s.name !== "Earth"; }).length,
+    "Relate To": speciesData.filter(function(s) { return s.category === "Relate To"; }).length,
+    "Perceive": speciesData.filter(function(s) { return s.category === "Perceive"; }).length,
+    "Apply": speciesData.filter(function(s) { return s.category === "Apply"; }).length };
+
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", padding: "32px 20px 20px", maxWidth: 600, margin: "0 auto" } },
+    E("div", { style: { fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 6, fontFamily: "'JetBrains Mono', monospace" } }, "Species Explorer"),
+    E("h2", { style: { fontSize: "clamp(18px, 3.5vw, 26px)", fontWeight: 300, color: "#f0ebe3", margin: "0 0 14px", fontFamily: "'Newsreader', serif" } }, "Meet the intelligence around you"),
+    E("input", { type: "text", placeholder: "Search by species, group, or kingdom...", value: search, onChange: function(e) { setSearch(e.target.value); }, style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "10px 16px", color: "#f0ebe3", fontSize: 13, fontFamily: "'Newsreader', serif", outline: "none", marginBottom: 10, width: "100%", boxSizing: "border-box" } }),
+    E("div", { style: { display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" } },
+      ["all", "Relate To", "Perceive", "Apply"].map(function(f) {
+        var isActive = filter === f;
+        var color = f === "all" ? "#888" : categoryMeta[f].color;
+        return E("button", { key: f, onClick: function() { setFilter(f); }, style: {
+          background: isActive ? color + "18" : "rgba(255,255,255,0.02)", border: "1px solid " + (isActive ? color + "40" : "rgba(255,255,255,0.06)"),
+          borderRadius: 20, padding: "5px 12px", cursor: "pointer", color: isActive ? color : "rgba(255,255,255,0.4)", fontSize: 12, fontFamily: "'Newsreader', serif", transition: "all 0.2s ease"
+        } }, (f === "all" ? "All" : f) + " (" + counts[f] + ")");
+      })
+    ),
+    E("div", { style: { flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 5, paddingRight: 4, minHeight: 0 } },
+      filtered.map(function(s) {
+        var meta = categoryMeta[s.category];
+        var isSelected = selected === s.name;
+        return E("button", { key: s.name, onClick: function() { setSelected(isSelected ? null : s.name); }, style: {
+          background: isSelected ? meta.bg : "rgba(255,255,255,0.015)", border: "1px solid " + (isSelected ? meta.border : "rgba(255,255,255,0.04)"),
+          borderRadius: 12, padding: isSelected ? "16px 18px" : "11px 18px", cursor: "pointer", textAlign: "left", transition: "all 0.3s ease", flexShrink: 0 } },
+          E("div", { style: { display: "flex", alignItems: "center", gap: 10 } },
+            E("span", { style: { fontSize: 20, width: 28, textAlign: "center" } }, s.icon),
+            E("div", { style: { flex: 1, minWidth: 0 } },
+              E("div", { style: { fontSize: 14, fontWeight: 500, color: "#eee9e1", fontFamily: "'Newsreader', serif" } }, s.name),
+              E("div", { style: { fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" } }, s.kingdom + " \u00B7 " + s.group)
+            ),
+            E("span", { style: { fontSize: 10, color: meta.color, padding: "2px 8px", background: meta.color + "12", borderRadius: 8, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" } }, s.category)
+          ),
+          isSelected ? E("div", { style: { margin: "12px 0 0 38px" } },
+            E("p", { style: { fontSize: 13, color: meta.color, margin: "0 0 10px", fontFamily: "'Newsreader', serif", fontStyle: "italic", lineHeight: 1.4 } }, s.tagline),
+            E("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 14px", fontFamily: "'Newsreader', serif" } }, s.narrative),
+            E("button", { onClick: function(e) { e.stopPropagation(); setShowScores(showScores === s.name ? null : s.name); }, style: {
+              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "8px 14px", cursor: "pointer",
+              color: "rgba(255,255,255,0.4)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", marginBottom: showScores === s.name ? 12 : 0, transition: "all 0.2s ease", width: "100%", textAlign: "left"
+            } }, showScores === s.name ? "\u25BE Hide dimensional scores" : "\u25B8 View dimensional scores"),
+            showScores === s.name ? E("div", { style: { marginTop: 8 } },
+              E(ScoreBar, { label: "Perceive", value: s.p, color: "#d6a86c", description: categoryMeta["Perceive"].long }),
+              E(ScoreBar, { label: "Relate To", value: s.r, color: "#6a9ab5", description: categoryMeta["Relate To"].long }),
+              E(ScoreBar, { label: "Apply", value: s.a, color: "#c47a52", description: categoryMeta["Apply"].long }),
+              E("p", { style: { fontSize: 10, color: "rgba(255,255,255,0.25)", margin: "8px 0 0", fontFamily: "'JetBrains Mono', monospace" } },
+                "Primary: " + s.category + " \u00B7 Gap: " + (Math.max(s.p, s.r, s.a) - [s.p, s.r, s.a].sort(function(a, b) { return b - a; })[1]).toFixed(2))
+            ) : null
+          ) : null
+        );
+      }),
+      filtered.length === 0 ? E("p", { style: { color: "rgba(255,255,255,0.3)", textAlign: "center", padding: 40, fontFamily: "'Newsreader', serif", fontStyle: "italic" } }, "No species found.") : null
+    ),
+    E("div", { style: { marginTop: 12, padding: "10px 14px", background: "rgba(255,255,255,0.02)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.04)" } },
+      E("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0, fontFamily: "'JetBrains Mono', monospace", textAlign: "center" } },
+        "Showing " + filtered.length + " featured species \u00B7 Full dataset: 172 species across every kingdom")
+    )
+  );
+}
+
+// ─── Recognition ───
+function RecognitionSection() {
+  var st = useState(0), step = st[0], setStep = st[1];
+  useEffect(function() {
+    var t1 = setTimeout(function() { setStep(1); }, 500);
+    var t2 = setTimeout(function() { setStep(2); }, 2000);
+    return function() { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 28px", maxWidth: 560, margin: "0 auto" } },
+    E("div", { style: { fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 20, fontFamily: "'JetBrains Mono', monospace" } }, "Recognition"),
+    E("div", { style: { opacity: step >= 1 ? 1 : 0, transform: step >= 1 ? "none" : "translateY(16px)", transition: "all 0.8s ease", marginBottom: 32 } },
+      E("p", { style: { fontSize: "clamp(16px, 3vw, 22px)", color: "#eee9e1", fontFamily: "'Newsreader', serif", lineHeight: 1.65, fontWeight: 300 } },
+        "An elephant and a mycelial network arrive at the same depth of meaning-making through entirely different biological expressions. A wolf pack and a dolphin pod arrive at nearly identical intelligence configurations \u2014 one on land, one in the ocean, through entirely different senses and social structures. A bear in solitary walking meditation experiences the same depth of relationship as a hyena navigating political alliances.")
+    ),
+    E("div", { style: { opacity: step >= 2 ? 1 : 0, transform: step >= 2 ? "none" : "translateY(16px)", transition: "all 0.8s ease", background: "rgba(61,97,120,0.05)", border: "1px solid rgba(61,97,120,0.15)", borderRadius: 14, padding: "24px 26px" } },
+      E("p", { style: { fontSize: "clamp(15px, 2.5vw, 20px)", color: "#6a9ab5", margin: "0 0 14px", fontFamily: "'Newsreader', serif", lineHeight: 1.55, fontStyle: "italic" } },
+        "The framework doesn\u2019t tell you something new about the species you know. It illuminates connections you may have felt but not had language for."),
+      E("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.45)", margin: 0, fontFamily: "'Newsreader', serif", lineHeight: 1.6 } },
+        "A coral reef biologist already knows that without communication across species boundaries, there is no reef \u2014 just scattered organisms. The reef\u2019s intelligence IS integration itself. This framework opens doors for that kind of recognition rather than claiming fixed answers.")
+    )
+  );
+}
+
+// ─── Vision ───
+function VisionSection() {
+  var ex = useState(null), expanded = ex[0], setExpanded = ex[1];
+  var points = [
+    { title: "A shared language across disciplines", desc: "Marine biologists, forest ecologists, animal behaviorists, and conservation educators all observe intelligence that current frameworks can\u2019t hold. P/R/A provides a common vocabulary that preserves the specificity of each species while revealing patterns that connect them." },
+    { title: "Education that sees species on their own terms", desc: "Instead of ranking species on a ladder from \u2018simple\u2019 to \u2018complex,\u2019 the framework illuminates each species within its own intelligence configuration. A jellyfish isn\u2019t less intelligent than a dolphin \u2014 it\u2019s organized around perception rather than meaning-making. Students learn to ask \u2018what organizes this being\u2019s existence?\u2019 rather than \u2018how does it compare to us?\u2019" },
+    { title: "Conservation informed by intelligence patterns", desc: "When you understand that 61% of species organize their existence around meaning-making, conservation strategy shifts. Protecting habitat isn\u2019t just preserving resources \u2014 it\u2019s preserving the conditions that allow meaning-making to continue. The framework connects ecological health to intelligence preservation." },
+    { title: "A different foundation for AI", desc: "Current AI can process information and generate outputs, but has no genuine internal relationship to what it processes. The same pattern the data reveals \u2014 that meaning-making, not computation, organizes most life \u2014 points toward a fundamentally different approach to building artificial intelligence. One where service to life\u2019s patterns is architectural, not aspirational." },
+  ];
+  return E("div", { style: { minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 28px", maxWidth: 560, margin: "0 auto" } },
+    E("div", { style: { fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "#6a9ab5", marginBottom: 12, fontFamily: "'JetBrains Mono', monospace" } }, "What This Makes Possible"),
+    E("h2", { style: { fontSize: "clamp(20px, 4vw, 30px)", fontWeight: 300, color: "#f0ebe3", margin: "0 0 28px", fontFamily: "'Newsreader', serif", lineHeight: 1.3 } }, "A framework that grows with your work"),
+    E("div", { style: { display: "flex", flexDirection: "column", gap: 8 } },
+      points.map(function(p, i) {
+        var isOpen = expanded === i;
+        return E("button", { key: i, onClick: function() { setExpanded(isOpen ? null : i); }, style: {
+          background: isOpen ? "rgba(61,97,120,0.06)" : "rgba(255,255,255,0.015)", border: "1px solid " + (isOpen ? "rgba(61,97,120,0.18)" : "rgba(255,255,255,0.04)"),
+          borderRadius: 12, padding: "14px 18px", cursor: "pointer", textAlign: "left", transition: "all 0.3s ease" } },
+          E("div", { style: { display: "flex", alignItems: "center", gap: 12 } },
+            E("span", { style: { fontSize: 18, color: "#6a9ab5", fontFamily: "'Newsreader', serif", width: 24, fontWeight: 300 } }, i + 1),
+            E("span", { style: { fontSize: 14, fontWeight: 500, color: "#eee9e1", fontFamily: "'Newsreader', serif" } }, p.title)
+          ),
+          isOpen ? E("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "12px 0 0 36px", fontFamily: "'Newsreader', serif" } }, p.desc) : null
+        );
+      })
+    ),
+    E("div", { style: { marginTop: 36, textAlign: "center", padding: "24px 20px", background: "rgba(255,255,255,0.02)", borderRadius: 14, border: "1px solid rgba(255,255,255,0.05)" } },
+      E("p", { style: { fontSize: 15, color: "rgba(255,255,255,0.5)", margin: "0 0 4px", fontFamily: "'Newsreader', serif" } }, "Explore the research"),
+      E("p", { style: { fontSize: 12, color: "#6a9ab5", margin: "0 0 16px", fontFamily: "'JetBrains Mono', monospace" } }, "researchexplorer.live \u00B7 pracel.live"),
+      E("p", { style: { fontSize: 12, color: "rgba(255,255,255,0.25)", margin: 0, fontFamily: "'JetBrains Mono', monospace" } }, "generateharmony.com \u00B7 intuitivelearningfoundation.org")
+    )
+  );
+}
+
+// ─── Main App ───
+function PRAGuide() {
+  var cr = useState(0), current = cr[0], setCurrent = cr[1];
+  var goTo = function(idx) { setCurrent(Math.max(0, Math.min(idx, sections.length - 1))); };
+
+  var comps = [
+    E(WelcomeSection, { key: "w", onNext: function() { goTo(1); } }),
+    E(QuestionSection, { key: "q" }),
+    E(FrameworkSection, { key: "f" }),
+    E(DataSection, { key: "d" }),
+    E(ExplorerSection, { key: "e" }),
+    E(RecognitionSection, { key: "r" }),
+    E(VisionSection, { key: "v" }),
+  ];
+
+  // Swipe
+  var touchStartRef = useRef(null);
+  var handleTouchStart = function(e) { touchStartRef.current = e.touches[0].clientX; };
+  var handleTouchEnd = function(e) {
+    if (touchStartRef.current === null) return;
+    var diff = touchStartRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 60) {
+      if (diff > 0 && current < sections.length - 1) goTo(current + 1);
+      if (diff < 0 && current > 0) goTo(current - 1);
+    }
+    touchStartRef.current = null;
+  };
+
+  return E("div", { onTouchStart: handleTouchStart, onTouchEnd: handleTouchEnd, style: {
+    width: "100%", height: "100vh", background: "#2a2725", color: "#f0ebe3", display: "flex", flexDirection: "column",
+    fontFamily: "'Newsreader', serif", overflow: "hidden", position: "relative" } },
+    // Texture
+    E("div", { style: { position: "absolute", inset: 0, opacity: 0.015, backgroundImage: "radial-gradient(rgba(61,97,120,0.4) 1px, transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" } }),
+    // Nav
+    current > 0 ? E("div", { style: { position: "absolute", top: 0, left: 0, right: 0, zIndex: 10, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" } },
+      E("button", { onClick: function() { goTo(current - 1); }, style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "5px 12px", color: "rgba(255,255,255,0.5)", fontSize: 12, cursor: "pointer", fontFamily: "'Newsreader', serif" } }, "\u2190 Back"),
+      E("div", { style: { display: "flex", gap: 5, alignItems: "center" } },
+        sections.map(function(s, i) { return E(NavDot, { key: s.id, active: i === current, label: s.label, onClick: function() { goTo(i); } }); })
+      ),
+      current < sections.length - 1 ?
+        E("button", { onClick: function() { goTo(current + 1); }, style: { background: "rgba(61,97,120,0.08)", border: "1px solid rgba(61,97,120,0.25)", borderRadius: 8, padding: "5px 12px", color: "#6a9ab5", fontSize: 12, cursor: "pointer", fontFamily: "'Newsreader', serif" } }, "Next \u2192") :
+        E("div", { style: { width: 60 } })
+    ) : null,
+    // Content
+    E("div", { style: { flex: 1, overflow: "hidden" } },
+      E("div", { key: current, style: { height: "100%", overflow: "auto", animation: "praguide_fadeIn 0.45s ease" } }, comps[current])
+    )
+  );
+}
+
+ReactDOM.render(E(PRAGuide), document.getElementById("root"));
+  </script>
 </body>
 </html>
