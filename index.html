@@ -387,10 +387,57 @@ function VisionSection() {
         );
       })
     ),
-    E("div", { style: { marginTop: 36, textAlign: "center", padding: "24px 20px", background: "rgba(255,255,255,0.02)", borderRadius: 14, border: "1px solid rgba(255,255,255,0.05)" } },
-      E("p", { style: { fontSize: 15, color: "rgba(255,255,255,0.5)", margin: "0 0 4px", fontFamily: "'Newsreader', serif" } }, "Explore the research"),
-      E("p", { style: { fontSize: 12, color: "#6a9ab5", margin: "0 0 16px", fontFamily: "'JetBrains Mono', monospace" } }, "researchexplorer.live \u00B7 pracel.live"),
-      E("p", { style: { fontSize: 12, color: "rgba(255,255,255,0.25)", margin: 0, fontFamily: "'JetBrains Mono', monospace" } }, "generateharmony.com \u00B7 intuitivelearningfoundation.org")
+    E("div", { style: { marginTop: 36, textAlign: "center", padding: "32px 24px", background: "rgba(61,97,120,0.06)", borderRadius: 16, border: "1px solid rgba(61,97,120,0.15)" } },
+      // Primary CTA
+      E("p", { style: { fontSize: 17, color: "#f0ebe3", margin: "0 0 6px", fontFamily: "'Newsreader', serif", fontWeight: 500 } }, "Ready to see your species differently?"),
+      E("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.45)", margin: "0 0 20px", fontFamily: "'Newsreader', serif", lineHeight: 1.5 } }, "Search any species and explore its intelligence configuration through the P/R/A framework."),
+      E("a", { href: "https://researchexplorer.live", target: "_blank", rel: "noopener noreferrer", style: {
+        display: "inline-block", background: "linear-gradient(135deg, #3d6178, #6a9ab5)", color: "#f0ebe3",
+        padding: "14px 36px", borderRadius: 40, fontSize: 15, fontFamily: "'Newsreader', serif", fontWeight: 500,
+        textDecoration: "none", letterSpacing: "0.03em", transition: "all 0.3s ease", boxShadow: "0 4px 16px rgba(61,97,120,0.3)"
+      },
+        onMouseEnter: function(e) { e.target.style.boxShadow = "0 6px 24px rgba(61,97,120,0.5)"; e.target.style.transform = "translateY(-1px)"; },
+        onMouseLeave: function(e) { e.target.style.boxShadow = "0 4px 16px rgba(61,97,120,0.3)"; e.target.style.transform = "none"; }
+      }, "Explore Your Species \u2192"),
+
+      // Divider
+      E("div", { style: { width: 40, height: 1, background: "rgba(255,255,255,0.08)", margin: "28px auto" } }),
+
+      // Secondary CTA
+      E("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.5)", margin: "0 0 8px", fontFamily: "'Newsreader', serif" } }, "Bring this framework to your organization"),
+      E("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.35)", margin: "0 0 14px", fontFamily: "'Newsreader', serif", lineHeight: 1.5, maxWidth: 400, marginLeft: "auto", marginRight: "auto" } },
+        "Education programs, institutional licensing, conference presentations, and research partnerships."),
+      E("a", { href: "mailto:kerri@unspeciated.com", style: {
+        display: "inline-block", background: "transparent", color: "#c47a52",
+        padding: "10px 28px", borderRadius: 40, fontSize: 13, fontFamily: "'Newsreader', serif", fontWeight: 500,
+        textDecoration: "none", border: "1px solid rgba(196,122,82,0.4)", transition: "all 0.3s ease"
+      },
+        onMouseEnter: function(e) { e.target.style.background = "rgba(196,122,82,0.08)"; },
+        onMouseLeave: function(e) { e.target.style.background = "transparent"; }
+      }, "Get in Touch"),
+
+      // Divider
+      E("div", { style: { width: 40, height: 1, background: "rgba(255,255,255,0.08)", margin: "24px auto" } }),
+
+      // Substack + footer links
+      E("div", { style: { display: "flex", justifyContent: "center", alignItems: "center", gap: 20, flexWrap: "wrap" } },
+        E("a", { href: "https://kerrilake.substack.com", target: "_blank", rel: "noopener noreferrer", style: {
+          fontSize: 12, color: "#d6a86c", fontFamily: "'JetBrains Mono', monospace", textDecoration: "none", transition: "color 0.2s ease"
+        },
+          onMouseEnter: function(e) { e.target.style.color = "#e8c08a"; },
+          onMouseLeave: function(e) { e.target.style.color = "#d6a86c"; }
+        }, "\u2709 Subscribe on Substack"),
+        E("span", { style: { color: "rgba(255,255,255,0.15)", fontSize: 12 } }, "\u00B7"),
+        E("a", { href: "https://pracel.live", target: "_blank", rel: "noopener noreferrer", style: {
+          fontSize: 12, color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", textDecoration: "none"
+        } }, "PRAcel"),
+        E("span", { style: { color: "rgba(255,255,255,0.15)", fontSize: 12 } }, "\u00B7"),
+        E("a", { href: "https://unspeciatedmapv2.netlify.app", target: "_blank", rel: "noopener noreferrer", style: {
+          fontSize: 12, color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", textDecoration: "none"
+        } }, "Intelligence Map")
+      ),
+      E("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.2)", margin: "20px 0 0", fontFamily: "'JetBrains Mono', monospace" } },
+        "\u00A9 2026 Generation of Harmony LLC \u00B7 Intuitive Learning Foundation")
     )
   );
 }
