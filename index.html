@@ -32,6 +32,12 @@ const T = {
   gold:    "#d6a86c",
   terra:   "#c47a52",
   ink:     "#2a2725",
+  // P / R / A dimension colors, from the Generation of Harmony brand kit.
+  // Relate To uses a lighter tint of the brand's leaf green (#5e7348) so it stays
+  // readable on this dark page; the base leaf green is too dark for text here.
+  perceive: "#6a9ab5",
+  relate:   "#8fa572",
+  apply:    "#d6a86c",
   serif:   "'Newsreader', serif",
   mono:    "'JetBrains Mono', monospace",
 };
@@ -106,19 +112,20 @@ const speciesData = [
     narrative:"Humans possess sophisticated sensory hardware but are severely limited in conscious awareness of what they perceive. Much of what humans call meaning-making is intellectual analysis — reading dials rather than sensing pressure. Humans are compulsively action-oriented, with the potential to expand perception and deepen meaning-making." },
   { name:"Earth", kingdom:"Mineral", category:"Perceive", group:"Planetary", icon:"🌍", p:0.92,r:0.90,a:0.80,
     tagline:"A living being sensing at every scale simultaneously",
-    narrative:"Earth perceives across extraordinary breadth — electromagnetic fields, gravitational waves, chemical gradients, thermal dynamics, quantum coherence, and biological feedback networks spanning cellular to planetary scales. Every creature on its surface functions as a sensory organ." },
+    narrative:"Earth perceives across extraordinary breadth — electromagnetic fields, gravitational waves, chemical gradients, thermal dynamics, and biological feedback networks spanning cellular to planetary scales. Every creature on its surface functions as a sensory organ." },
 ];
 
 const categoryMeta = {
-  "Relate To": { color: T.teal,  bg:"rgba(61,97,120,0.08)",  border:"rgba(61,97,120,0.22)",  long:"How an individual internally holds and responds to what is perceived — the act of meaning-making, where felt weight, significance, and orientation arise." },
-  "Perceive":  { color: T.gold,  bg:"rgba(214,168,108,0.08)", border:"rgba(214,168,108,0.22)", long:"The capacity to detect both linear and nonlinear information — sensory data, patterns, felt sense, environmental signals." },
-  "Apply":     { color: T.terra, bg:"rgba(196,122,82,0.08)",  border:"rgba(196,122,82,0.22)",  long:"Applying information in relation to living contexts and the way life collaborates with itself." },
+  "Relate To": { color: T.relate,   bg:"rgba(143,165,114,0.08)", border:"rgba(143,165,114,0.22)", long:"How an individual internally holds and responds to what is perceived — the act of meaning-making, where felt weight, significance, and orientation arise." },
+  "Perceive":  { color: T.perceive, bg:"rgba(106,154,181,0.08)", border:"rgba(106,154,181,0.22)", long:"The capacity to detect both what can be measured and what can be felt — sensory data, patterns, felt sense, environmental signals." },
+  "Apply":     { color: T.apply,    bg:"rgba(214,168,108,0.08)", border:"rgba(214,168,108,0.22)", long:"Applying information in relation to living contexts and the way life collaborates with itself." },
 };
 
-// ── sections (12 screens) ─────────────────────────────────────────────────
+// ── sections (13 screens) ─────────────────────────────────────────────────
 const sections = [
   { id:"welcome" },
   { id:"question" },
+  { id:"heterarchy" },
   { id:"perceive" },
   { id:"relate" },
   { id:"apply" },
@@ -249,6 +256,23 @@ function QuestionScreen() {
   );
 }
 
+function HeterarchyScreen() {
+  return E(Screen, null,
+    E(Label, null, "Living Intelligence"),
+    E(HeadLine, null, "Life is heterarchical."),
+    E(Body, { style:{ margin:"0 0 24px" }},
+      "In a forest, a herd, or a single body, living intelligence moves without reference to a single, fixed apex. The mycelium, the redwood, the banana slug and the rain each take the lead when the moment calls for them, simply by expressing their innate nature."
+    ),
+    E(Body, null,
+      "When we press a living heterarchy onto a single ladder, our picture of intelligence collapses into above and below. ",
+      E("span", { style:{ color:T.perceive }}, "Perceive"), " \u2022 ",
+      E("span", { style:{ color:T.relate }}, "Relate To"), " \u2022 ",
+      E("span", { style:{ color:T.apply }}, "Apply"),
+      " is one way we come to recognize the whole, one being and one fractal moment at a time."
+    )
+  );
+}
+
 function DimensionScreen({ letter, label, color, tagline, description, examples }) {
   return E(Screen, null,
     E(Label, { color }, "The Framework · " + label),
@@ -276,16 +300,16 @@ function DataChartScreen() {
   const [revealed, setRevealed] = useState(false);
   useEffect(()=>{ setTimeout(()=>setRevealed(true),500); },[]);
   const bars = [
-    { label:"Relate To", pct:58, color:T.teal },
-    { label:"Perceive",  pct:15, color:T.gold },
-    { label:"Apply",     pct:12, color:T.terra },
+    { label:"Relate To", pct:58, color:T.relate },
+    { label:"Perceive",  pct:15, color:T.perceive },
+    { label:"Apply",     pct:12, color:T.apply },
     { label:"Balanced",  pct:15, color:"#888" },
   ];
   return E(Screen, null,
     E(Label, null, "260+ Species · Every Kingdom of Life"),
     E(HeadLine, null,
       "When you map intelligence across species, ",
-      E("em", { style:{ color:T.teal }}, "meaning-making leads")
+      E("em", { style:{ color:T.relate }}, "meaning-making leads")
     ),
     E("div", { style:{ display:"flex", flexDirection:"column", gap:14, marginBottom:32 }},
       bars.map(b=>E("div", { key:b.label },
@@ -309,12 +333,12 @@ function DataChartScreen() {
 function DataHumanScreen() {
   return E(Screen, null,
     E(Label, null, "A Notable Finding"),
-    E(HeadLine, { color:T.terra }, "Humans are Apply-primary."),
+    E(HeadLine, { color:T.apply }, "Humans are Apply-primary."),
     E(Body, { style:{ margin:"0 0 28px" }},
       "We are one of the few species whose existence is organized primarily around action — compulsively oriented toward changing the external world, regardless of the depth of perception or meaning-making that precedes it."
     ),
-    E("div", { style:{ background:"rgba(196,122,82,0.07)", border:"1px solid rgba(196,122,82,0.2)", borderRadius:16, padding:"24px 28px" }},
-      E("p", { style:{ fontSize:"clamp(16px,2.5vw,19px)", color:T.terra, fontFamily:T.serif, lineHeight:1.7, fontStyle:"italic" }},
+    E("div", { style:{ background:"rgba(214,168,108,0.07)", border:"1px solid rgba(214,168,108,0.2)", borderRadius:16, padding:"24px 28px" }},
+      E("p", { style:{ fontSize:"clamp(16px,2.5vw,19px)", color:T.apply, fontFamily:T.serif, lineHeight:1.7, fontStyle:"italic" }},
         "The invitation in this framework isn't a critique of human intelligence. It's a reminder that we have the capacity to expand what we perceive and deepen the meaning we make — before we act."
       )
     )
@@ -393,9 +417,9 @@ function ExplorerScreen() {
               transition:"all 0.2s ease", width:"100%", textAlign:"left",
             }}, showScores===s.name ? "▾ Hide scores" : "▸ View P / R / A scores"),
             showScores===s.name ? E("div", { style:{ marginTop:8 }},
-              E(ScoreBar, { label:"Perceive", value:s.p, color:T.gold }),
-              E(ScoreBar, { label:"Relate To", value:s.r, color:T.teal }),
-              E(ScoreBar, { label:"Apply", value:s.a, color:T.terra }),
+              E(ScoreBar, { label:"Perceive", value:s.p, color:T.perceive }),
+              E(ScoreBar, { label:"Relate To", value:s.r, color:T.relate }),
+              E(ScoreBar, { label:"Apply", value:s.a, color:T.apply }),
             ) : null
           ) : null
         );
@@ -514,15 +538,16 @@ function PRAGuide() {
   const screens = [
     E(WelcomeScreen,     { key:"welcome",       onNext:()=>goTo(1) }),
     E(QuestionScreen,    { key:"question" }),
-    E(DimensionScreen,   { key:"perceive",      letter:"P", label:"Perceive",   color:T.gold,
+    E(HeterarchyScreen,  { key:"heterarchy" }),
+    E(DimensionScreen,   { key:"perceive",      letter:"P", label:"Perceive",   color:T.perceive,
       tagline:"The capacity to take in information — through every channel available.",
-      description:"Every species perceives through a different combination of channels, at different depths. Perceive covers both linear information — light, sound, pressure, chemistry — and nonlinear information: felt sense, bioelectric fields, quantum coherence, the kind of knowing that arrives before explanation. How many channels a species receives through, and how deep the reception within those channels, shapes everything else.",
+      description:"Every species perceives through a different combination of channels, at different depths. Perceive covers both what can be measured, like light, sound, pressure, chemistry, and electric and magnetic fields, and what can be felt: the shift in a room, the sense of another's presence, the kind of knowing that arrives before explanation. How many channels a species receives through, and how deep the reception within those channels, shapes everything else.",
       examples:["Mantis Shrimp","Jellyfish","Grasshoppers","Flies","Earth"] }),
-    E(DimensionScreen,   { key:"relate",        letter:"R", label:"Relate To",  color:T.teal,
+    E(DimensionScreen,   { key:"relate",        letter:"R", label:"Relate To",  color:T.relate,
       tagline:"The internal act of making meaning from what is perceived.",
       description:"This is not about relationships between species — it is about what happens inside an individual organism when information arrives. Where that information gains weight, significance, and orientation. Where a scent becomes a memory, a temperature becomes a warning, a pattern becomes understanding. This is the dimension most life on Earth appears to organize itself around.",
       examples:["Elephants","Coral Reefs","Mycelial Networks","Whales","Aspen Trees"] }),
-    E(DimensionScreen,   { key:"apply",         letter:"A", label:"Apply",      color:T.terra,
+    E(DimensionScreen,   { key:"apply",         letter:"A", label:"Apply",      color:T.apply,
       tagline:"Acting on information in relation to living contexts.",
       description:"Apply is not just doing — it is doing in relationship to the way life collaborates with itself. The breadth and depth of a species' behavioral repertoire. A frog metamorphosing between two body plans. A beaver reshaping a watershed. A coral reef synchronizing spawning across miles of ocean. And humans — compulsively transforming the external world, with the potential to act from deeper perception and meaning.",
       examples:["Frogs","Humans","North American Beaver","Red Ants"] }),
